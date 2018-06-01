@@ -1,8 +1,8 @@
 package principal;
 
 public class Persona {
- private String nombre;
- private String dni;
+ protected String nombre;
+ protected String dni;
  	public String getdni() {
  		return dni;
  	     }

@@ -24,6 +24,34 @@ public class cambios {
 		return c1;
 	}
 	
+	public static String GregorianCalendar_String(GregorianCalendar fecha) {
+		int diaX=fecha.getTime().getDay();
+		String dia,mes;
+			if(diaX<10) {
+				dia="0"+String.valueOf(diaX);
+			}
+			else {
+				dia=String.valueOf(diaX);
+			}
+		int mesX=fecha.getTime().getMonth()+1;
+			if(mesX<10) {
+				mes="0"+String.valueOf(mesX);
+			}
+			else {
+				mes=String.valueOf(mesX);
+			}
+		int anoX=fecha.getTime().getYear();
+			if(anoX<10) {
+				anoX=anoX+2000;
+			}
+			else {
+				anoX=anoX+1900;
+			}
+		String ano=String.valueOf(anoX);
+		String respuesta=dia+ "\\"+ mes + "\\"+ano;
+		return respuesta;
+	}
+	
 
 	public static Date String_Date(String cadena) {
 

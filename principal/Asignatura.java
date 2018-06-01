@@ -7,25 +7,34 @@ public class Asignatura {
  private String siglas;
  private String cursoAcademico;
  private String nombre;
- private double nota;
+ private String nota;
  private String curso;
  private String cuatrimestre;
  private String prerequisitos;
  private String duracionA;
  private String duracionB;
  private String coordinador;
- private Map<String,Grupo> grupos= new TreeMap<String,Grupo>();
-
+ private String grupo;
+ private String identificadorA;
+ private String identificadorB;
+ private String identificadorM;
+ //IdentificadorM usarase para as asignaturas que nn teñan ningun grupo asignado, non podemos usar SOLO a asignaturas
+ //de clave porque daría problemas coas asignaturas xa superadas, asique usamos 'Sigla+M' e sabemos que se refire a que non ten grupo
+ 
+ 
  public String getsiglas() {
 	 return siglas;
  }
  public String getcursoAcademico() {
 	 return cursoAcademico;
  }
+ public String getgrupo() {
+	 return grupo;
+ }
  public String getnombre() {
 	 return nombre;
  }
- public double getnota() {
+ public String getnota() {
 	 return nota;
  }
  public String getcurso() {
@@ -46,14 +55,36 @@ public class Asignatura {
  public String getcoordinador() {
 	 return coordinador;
  }
+ public String getidentificadorA(){
+	 return identificadorA;
+ }
+ public String getidentificadorB(){
+	 return identificadorB;
+ }
+ public String getidentificadorM() {
+	 return identificadorM;
+ }
+ 
+ public Asignatura(String siglasX) {//Este constructor e para cando chegue unha asignatura sen grupo
+	 this.siglas=siglasX;
+	 }
+ 
+ 
  public Asignatura(String siglasX, String cursoX, double notaX) {
 	 this.siglas=siglasX;
 	 this.curso=cursoX;
-	 this.nota=notaX;
+	 this.nota=String.valueOf(notaX);
 }
- public Asignatura(String siglasX,Map<String, Grupo> gruposX) {
+ public Asignatura(String siglasX,String grupoX,String identificadorX) {
 	 this.siglas=siglasX;
-	 grupos.putAll(gruposX);
-}
+	 this.grupo=grupoX;
+	 if(grupoX.equals("A")){
+		 this.identificadorA=identificadorX;
+	 }
+	 else  if(grupoX.equals("B")){
+		 this.identificadorB=identificadorX;
+	 }
+	 else System.out.println("Fallo no constructor de asignatura, non se reconoce o tipo do grupo    "+grupoX);
+ }
 }
 

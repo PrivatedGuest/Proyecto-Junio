@@ -6,10 +6,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import principal.Alumno;
+import principal.Persona;
 
 public class leertxt {
-	public static Map<String, Alumno> leeralumno(String direccion){
-			Map<String,Alumno> mapaAlumnoX= new TreeMap<String,Alumno>();	
+	public static Map<String, Persona> leeralumno(String direccion){
+			Map<String,Persona> mapaAlumnoX= new TreeMap<String,Persona>();	
 			String todo="     ";
 			String[] todos;
 			try {
