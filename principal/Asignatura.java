@@ -5,7 +5,6 @@ import java.util.TreeMap;
 
 public class Asignatura {
  private String siglas;
- private String cursoAcademico;
  private String nombre;
  private String nota;
  private String curso;
@@ -22,12 +21,14 @@ public class Asignatura {
  //de clave porque daría problemas coas asignaturas xa superadas, asique usamos 'Sigla+M' e sabemos que se refire a que non ten grupo
  
  
+ public void imp1() {
+	 System.out.println(siglas+" "+curso+" "+nota);
+ }
+ 
  public String getsiglas() {
 	 return siglas;
  }
- public String getcursoAcademico() {
-	 return cursoAcademico;
- }
+
  public String getgrupo() {
 	 return grupo;
  }

@@ -45,7 +45,7 @@ public class Escribirtxt {
 								Asignatura asigAux=auxiliar.getValue();
 								aux=aux.trim();
 								if(!claveaux.contains("+")) {
-								aux=aux+asigAux.getsiglas()+" "+asigAux.getcursoAcademico()+" "+asigAux.getnota()+";";
+								aux=aux+asigAux.getsiglas()+" "+asigAux.getcurso()+" "+asigAux.getnota()+";";
 								}
 							}//en paraimprimir esta todo o que temos que imprimir na 5 linea +";" que nn queremos, pero ollo que pode nn haber 5 linea
 						if(aux.length()==0) {

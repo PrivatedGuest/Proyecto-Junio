@@ -1,13 +1,13 @@
 package funciones;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.GregorianCalendar;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
 import principal.Alumno;
 import principal.Asignatura;
-import principal.Grupo;
 import principal.Persona;
 
 public class ordenar {
@@ -15,17 +15,17 @@ public class ordenar {
 	public static Map<String,Persona> alumnos(String[] todos) {
 		Map<String,Persona> mapaPersonaX= new TreeMap<String,Persona>();
 		int contadorAlumnos;
+		Map<String,Asignatura> asignaturas = null;
 		GregorianCalendar fechaNacX = (GregorianCalendar) GregorianCalendar.getInstance() ;
 		GregorianCalendar fechaIngX = (GregorianCalendar) GregorianCalendar.getInstance() ;
 		for(contadorAlumnos=0;contadorAlumnos<todos.length;contadorAlumnos++) {//bucle repitese para todos os alumnos
-		Map<String,Asignatura> asignaturas= new TreeMap<String,Asignatura>();
-		Iterator it=asignaturas.keySet().iterator();	
+			asignaturas= new TreeMap<String,Asignatura>();
+		asignaturas.clear();
 		
-		//Con esto CREO que se borra todo o mapa, para sobreescribilo en cada alumno
-		while(it.hasNext()) {
-													asignaturas.remove(it.next());
-		}
-		
+		//while(it.hasNext()) {
+			
+		//											asignaturas.remove(it.next());
+		//}
 		int existeemail=0;
 		int mapaasignaturas=0;
 		
@@ -84,6 +84,7 @@ public class ordenar {
 								notaX=Double.parseDouble(auxiliar2case5[2].trim());
 								asignaturas.put(siglaX,new Asignatura(siglaX,cursoX,notaX));
 							}//Gardamos todo en asignaturas, buscamos por nombre e a docencia recibida chamaremoslle
+							
 							break;//"asignatura+grupo" deste xeito para separar faremos .cointain"+"
 						
 						case 6:
@@ -110,8 +111,8 @@ public class ordenar {
 							}
 						}	//salimos do switch
 					}//salida do "if" para asegurar que a linea nn esta en blanco
-		}//salimos do for do alumno, e dicir o alumno esta listo
-				
+				}//salimos do for do alumno, e dicir o alumno esta listo
+			//temos diferentes construtores porque poden faltar campos na construccion
 				if(existeemail>0&&mapaasignaturas>0) {
 					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,emailX,fechaNacX,fechaIngX,asignaturas));
 				}
@@ -125,23 +126,42 @@ public class ordenar {
 					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,fechaNacX,fechaIngX,asignaturas));
 				}
 				else System.out.println("Que pasa aqui");
-				}//salimos do for de todos os alumnos
+					}//salimos do for de todos os alumnos
 		
 		//Esto son comprobacios que se poden borrar
+		int contadoralu=0;
+		int axudaarquivo=0;
+		FileWriter escritura=null;
 			for(Map.Entry<String, Persona> p: mapaPersonaX.entrySet()) {
 				if(p.getValue() instanceof Alumno) {
+					contadoralu++;
 					Alumno auxiliar=(Alumno)p.getValue();
 					try {
-						auxiliar.imp();
+					
+					File archivo=new File("alumnosfinal.txt");
+							if(archivo.exists()&&axudaarquivo!=0) {
+									escritura= new FileWriter("alumnosfinal.txt",true);
+								}
+								else {
+									escritura= new FileWriter("alumnosfinal.txt");
+								}
+					axudaarquivo++;
+					escritura.write(auxiliar.imp());		
+					//System.out.print(auxiliar.imp());
+				    escritura.write(auxiliar.impasig());
+					//System.out.print(auxiliar.impasig());
+					if(contadoralu<Alumno.getalumnostotal()) {
+						escritura.write("*\r\n");
+					//	System.out.print("*\n");
+					}
+					escritura.close();
 					}catch(Exception e) {
 						e.printStackTrace();
-					}
-					
+					}	
 				}
 				}
 			//Ata aqui podes borrar
 					return mapaPersonaX;
-					
 					
 				}
 
