@@ -7,6 +7,19 @@ public class Grupo {
 	private double horaInicio;
 	private String id;
 
+	public Grupo(String ID, String dia, double HoraInicio, String Aula) {
+		this.id=ID;
+		this.dia=dia;
+		this.horaInicio=HoraInicio;
+		this.aula=Aula;
+	}
+	
+	
+public String imprimirGrupo() {
+	String aux=id+" "+dia+"  "+horaInicio+"  "+aula;
+	return aux;
+}
+	
 public String gettipo() {
 	return tipo;
 }
@@ -22,12 +35,6 @@ public String getid() {
 public double gethoraInicio(){
 	return horaInicio;
 }
-public Grupo(String tipoX, String idX) {
-	this.tipo=tipoX;
-	this.id=idX;
-}
-public Grupo(String tipoX) {
-	this.tipo=tipoX;
 }
 
-}
+

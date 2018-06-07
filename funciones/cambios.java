@@ -71,20 +71,5 @@ public class cambios {
         }
 		Date c1=new Date(anio,mes,dia); 
 		return c1;	
-}
-	
-	
-	
-	public static String quitarespacios(String linea) {
-		while(linea.contains("  ")) {
-			linea.replace("  ", " ");
-		}
-		return linea;
-	}
-	
-	public static String minusculas(String linea){
-		linea=linea.toLowerCase();
-		return linea;
-	}
-	
+}	
 }

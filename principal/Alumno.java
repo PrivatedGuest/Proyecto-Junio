@@ -152,7 +152,6 @@ public String impasig() {
 			}//Salida do if
 	}//Salida do for da linea 6
 			if(contador<1) {
-				//  System.out.println("contwdadwadadooooor  "+contador);
 					aux=aux+"\r\n";
 				}
 	return aux;

@@ -49,10 +49,17 @@ public class Comprobar {
 		return true;
 		}
 	
-	//public static boolean comando(String linea) {
-	//	
-	//	
-	//}
-	
-	
-}
+	public static boolean comando(String linea) {
+		linea=linea.trim();
+		linea=faux.quitarespacios(linea);
+		String[] aux=linea.split(" ");
+		String comando =aux[0];
+		comando= faux.minusculas(comando);
+		switch(comando){
+		case "insertapersona":
+			return true;
+		default:
+			return false;
+		}	
+		}
+	}
