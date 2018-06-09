@@ -28,10 +28,7 @@ public class Comprobar {
     Date fecha=cambios.String_Date(fechaX);
     int aux=fecha.compareTo(cotasup);//Fecha e anterior o argumento, devolve un negativo
     int aux2=fecha.compareTo(cotainf);//Fecha e posterior o argumento,devolve un positivo
-    System.out.println("AUX    "+fecha.compareTo(cotasup));
-    System.out.println("AUX2   "+aux2);
     	if(aux<0&&aux2>0) {
-    		System.out.println("OKEY ASI VALE");
     		return true;
     	}
     	return false;
@@ -43,8 +40,6 @@ public class Comprobar {
 		Date fechaIng= cambios.String_Date(fechaing);
 		float diferencia= (float)((fechaIng.getTime()-fechaNac.getTime())/(3154));
 		diferencia=diferencia/10000000;
-		
-		System.out.println("DIFERENCIAAAAA      "+diferencia);
 		if(diferencia<16||diferencia>60) return false;
 		return true;
 		}
@@ -57,6 +52,8 @@ public class Comprobar {
 		comando= faux.minusculas(comando);
 		switch(comando){
 		case "insertapersona":
+			return true;
+		case "matricula":
 			return true;
 		default:
 			return false;

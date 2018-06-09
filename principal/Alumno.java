@@ -15,10 +15,18 @@ private Map<String,Asignatura> asignaturas=new TreeMap<String,Asignatura>();
 private int Gruposlinea5=0;
 private int Gruposlinea6=0;
 private static int ContadorAlumnos=0;
+//A clave do mapa de asignaturas sera siglas+tipoGrupo se nos referimos as que esta cursando ou
+//solo as siglas que nos referimos a docencia que xa cursou e aprobou
 
 public static int getalumnostotal() {
 	return ContadorAlumnos;
 }
+
+public void engadirasig(String siglas,Asignatura asig) {
+	Gruposlinea6++;
+	this.asignaturas.put(siglas,asig);
+}
+
 public GregorianCalendar getfechaNac() {
 	return fechaNac;
 }
@@ -66,7 +74,6 @@ public Alumno(String dniX,String nombreX,GregorianCalendar fechaNacX,GregorianCa
 		}
 	}
 	Gruposlinea6=asignaturas.size()-Gruposlinea5;
-	//System.out.println(asignaturas);
 }
 
 

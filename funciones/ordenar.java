@@ -234,6 +234,7 @@ public class ordenar {
 		String duracionBX= "";
 		int existePrerequisitos=0;
 		for(contadorAsignaturas=0;contadorAsignaturas<todos.length;contadorAsignaturas++) {//Repitese para todas as asignaturas
+			prerequisitosX="\r\n";
 			mapaGruposX= new TreeMap<String,Grupo>();
 			mapaGruposX.clear();
 			String[] asignaturai=todos[contadorAsignaturas].split("[\n]");

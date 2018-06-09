@@ -14,7 +14,7 @@ public class cambios {
         }
         if(fechaArray.length==3) {
         dia = Integer.valueOf(fechaArray[0]);
-        mes = Integer.valueOf(fechaArray[1])-1;
+        mes = Integer.valueOf(fechaArray[1]);
         anio = Integer.valueOf(fechaArray[2]);
         }
         else {
@@ -25,7 +25,7 @@ public class cambios {
 	}
 	
 	public static String GregorianCalendar_String(GregorianCalendar fecha) {
-		int diaX=fecha.getTime().getDay();
+		int diaX=fecha.get(fecha.DAY_OF_MONTH);
 		String dia,mes;
 			if(diaX<10) {
 				dia="0"+String.valueOf(diaX);
@@ -33,20 +33,14 @@ public class cambios {
 			else {
 				dia=String.valueOf(diaX);
 			}
-		int mesX=fecha.getTime().getMonth()+1;
+		int mesX=fecha.get(fecha.MONTH);
 			if(mesX<10) {
 				mes="0"+String.valueOf(mesX);
 			}
 			else {
 				mes=String.valueOf(mesX);
 			}
-		int anoX=fecha.getTime().getYear();
-			if(anoX<10) {
-				anoX=anoX+2000;
-			}
-			else {
-				anoX=anoX+1900;
-			}
+		int anoX=fecha.get(fecha.YEAR);
 		String ano=String.valueOf(anoX);
 		String respuesta=dia+ "\\"+ mes + "\\"+ano;
 		return respuesta;

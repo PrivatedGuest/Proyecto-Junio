@@ -80,7 +80,8 @@ public class Escribirtxt {
 			 escritura= new FileWriter("avisosfinal.txt",true);
 		 }
 		 else escritura= new FileWriter("avisosfinal.txt");
-		 escritura.write(imprimir+"\n");
+		 escritura.write(imprimir+"\r\n");
+		 escritura.close();
 		 }catch(Exception e) {
 			 System.out.println(e.getMessage());
 		 }		 
