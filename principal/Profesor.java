@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import funciones.cambios;
+import funciones.faux;
 
 public class Profesor extends Persona{
 private String categoria;
@@ -15,6 +16,14 @@ private Map<String,Asignatura> asignaturas=new TreeMap<String,Asignatura>();
 private int Gruposlinea5=0;
 private int Gruposlinea6=0;
 private static int ContadorProfesores=0;
+
+
+public void setcuatrimestres(Map<String,Asignatura> mapaAsignaturas) {
+	for(Map.Entry<String, Asignatura> asig: asignaturas.entrySet()) {
+		String aux=faux.getcuatrimestre(asig.getValue().getsiglas(), mapaAsignaturas);
+		asig.getValue().setcuatrimestre(aux);
+	}
+}
 
 
 public String getcategoria() {

@@ -65,7 +65,7 @@ public class Asignatura {
  }
  
  
- public Asignatura(String siglasX, String cursoX, double notaX) {
+ public Asignatura(String siglasX, String cursoX, float notaX) {
 	 this.siglas=siglasX;
 	 this.curso=cursoX;
 	 this.nota=String.valueOf(notaX);
@@ -82,7 +82,20 @@ public class Asignatura {
 	 else System.out.println("Fallo no constructor de asignatura, non se reconoce o tipo do grupo    "+grupoX);
  }
  
- 
+ public void setHorafinalGrupos() {
+	 if(mapagrupos!=null) {
+	 for(Map.Entry<String, Grupo> g: this.mapagrupos.entrySet()) {
+		 if(g.getValue().gettipo().equals("A")) {
+			 g.getValue().setHorafinal(this.duracionA);
+		 }
+		 else if(g.getValue().gettipo().equals("B")) {
+			 g.getValue().setHorafinal(this.duracionB);
+		 }
+		 else {
+			 System.out.println("FALLO EN SETHORAFINALGRUPOS");
+		 }
+	 }
+ }}
  
  public String imprimirasignatura() {
 	 String aux;
@@ -138,6 +151,9 @@ public class Asignatura {
  }
  public String getcuatrimestre() {
 	 return cuatrimestre;
+ }
+ public void setcuatrimestre(String linea) {
+	 this.cuatrimestre=linea;
  }
  public String getprerequisitos() {
 	 return prerequisitos;

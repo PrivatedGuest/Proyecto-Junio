@@ -14,7 +14,7 @@ import principal.Profesor;
 
 public class ordenar {
 	
-	public static Map<String,Persona> alumnos(String[] todos) {
+	public static Map<String,Persona> alumnos(String[] todos,Map<String,Asignatura> mapaAsignaturas) {
 		Map<String,Persona> mapaPersonaX= new TreeMap<String,Persona>();
 		int contadorAlumnos;
 		Map<String,Asignatura> asignaturas = null;
@@ -31,7 +31,8 @@ public class ordenar {
 		int contador=0;
 		String dniX="",nombreX="",emailX = "";
 		int contadorcorreo=0;
-		String siglaX;String cursoX;double notaX;
+		//antes o float era double, se hai fallos inexplicables pode ser deso(?)
+		String siglaX;String cursoX;float notaX;
 		alumnoi=null;
 		alumnoi=todos[contadorAlumnos].split("[\n]");//Dividimos os campos do alumnoi
 				int lineaj=0;
@@ -79,7 +80,7 @@ public class ordenar {
 								auxiliar2case5=auxiliar1case5[k].split(" ");//separamos as palabras
 								siglaX=auxiliar2case5[0].trim();
 								cursoX=auxiliar2case5[1].trim();
-								notaX=Double.parseDouble(auxiliar2case5[2].trim());
+								notaX=Float.parseFloat(auxiliar2case5[2].trim());
 								asignaturas.put(siglaX,new Asignatura(siglaX,cursoX,notaX));
 							}//Gardamos todo en asignaturas, buscamos por nombre e a docencia recibida chamaremoslle
 							
@@ -112,16 +113,24 @@ public class ordenar {
 				}//salimos do for do alumno, e dicir o alumno esta listo
 			//temos diferentes construtores porque poden faltar campos na construccion
 				if(existeemail>0&&mapaasignaturas>0) {
-					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,emailX,fechaNacX,fechaIngX,asignaturas));
+					Alumno auxiliar=new Alumno(dniX,nombreX,emailX,fechaNacX,fechaIngX,asignaturas);
+					mapaPersonaX.put(dniX, auxiliar);
+					auxiliar.setcuatrimestres(mapaAsignaturas);
 				}
 				else if(existeemail==0&&mapaasignaturas>0) {
-					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,fechaNacX,fechaIngX,asignaturas));
+					Alumno auxiliar= new Alumno(dniX,nombreX,fechaNacX,fechaIngX,asignaturas);
+					mapaPersonaX.put(dniX, auxiliar);
+					auxiliar.setcuatrimestres(mapaAsignaturas);
 				}
 				else if(existeemail>0&&mapaasignaturas==0) {
-					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,emailX,fechaNacX,fechaIngX));
+					Alumno auxiliar= new Alumno(dniX,nombreX,emailX,fechaNacX,fechaIngX);
+					mapaPersonaX.put(dniX, auxiliar);
+					auxiliar.setcuatrimestres(mapaAsignaturas);
 				}
 				else if(existeemail==0&&mapaasignaturas==0) {
-					mapaPersonaX.put(dniX, new Alumno(dniX,nombreX,fechaNacX,fechaIngX,asignaturas));
+					Alumno auxiliar=new Alumno(dniX,nombreX,fechaNacX,fechaIngX,asignaturas);
+					mapaPersonaX.put(dniX,auxiliar);
+					auxiliar.setcuatrimestres(mapaAsignaturas);
 				}
 				else System.out.println("Que pasa aqui");
 					}//salimos do for de todos os alumnos
@@ -131,7 +140,7 @@ public class ordenar {
 	
 	
 	
-	public static Map<String,Persona> profesores(String[] todos) {
+	public static Map<String,Persona> profesores(String[] todos,Map<String,Asignatura> mapaAsignaturas) {
 		Map<String,Persona> mapaPersonaX= new TreeMap<String,Persona>();
 		int contadorProfesores;
 		Map<String,Asignatura> asignaturas = null;
@@ -205,10 +214,14 @@ public class ordenar {
 				}//salimos do for do alumno, e dicir o alumno esta listo
 			//temos diferentes construtores porque poden faltar campos na construccion
 				if(mapaasignaturas>0) {
-					mapaPersonaX.put(dniX, new Profesor(dniX,nombreX,fechaNacX,categoriaX,departamentoX,asignaturas));
+					Profesor auxi= new Profesor(dniX,nombreX,fechaNacX,categoriaX,departamentoX,asignaturas);
+					mapaPersonaX.put(dniX,auxi);
+					auxi.setcuatrimestres(mapaAsignaturas);
 				}
 				else if(mapaasignaturas==0) {
-					mapaPersonaX.put(dniX, new Profesor(dniX,nombreX,fechaNacX,categoriaX,departamentoX));
+					Profesor auxi=new Profesor(dniX,nombreX,fechaNacX,categoriaX,departamentoX);
+					mapaPersonaX.put(dniX,auxi );
+					auxi.setcuatrimestres(mapaAsignaturas);
 				}					
 				else System.out.println("Que pasa aqui");
 					}//salimos do for de todos os profesores
@@ -228,7 +241,7 @@ public class ordenar {
 		String cuatrimestreX= "";
 		String coordinadorX = "";
 		String prerequisitosX = " ";
-		String idX,diaX,aulaX;double horainicioX;
+		String idX,diaX,aulaX;float horainicioX;
 		prerequisitosX=prerequisitosX.trim();
 		String duracionAX= "";
 		String duracionBX= "";
@@ -299,9 +312,9 @@ public class ordenar {
 						auxiliar2case8=auxiliar1case8[k].split(" ");//separamos as palabras
 						idX=auxiliar2case8[0].trim();
 						diaX=auxiliar2case8[1].trim();
-						horainicioX=Double.parseDouble(auxiliar2case8[2].trim());
+						horainicioX=Float.parseFloat(auxiliar2case8[2].trim());
 						aulaX=auxiliar2case8[3].trim();
-						mapaGruposX.put("A"+"+"+idX,new Grupo(idX,diaX,horainicioX,aulaX));
+						mapaGruposX.put("A"+"+"+idX,new Grupo("A",idX,diaX,horainicioX,aulaX));
 					}//O mapa dos grupos ira dentro de cada asignatura
 					
 					break;//"asignatura+grupo" deste xeito para separar faremos .cointain"+"
@@ -316,9 +329,9 @@ public class ordenar {
 						auxiliar2case9=auxiliar1case9[k].split(" ");//separamos as palabras
 						idX=auxiliar2case9[0].trim();
 						diaX=auxiliar2case9[1].trim();
-						horainicioX=Double.parseDouble(auxiliar2case9[2].trim());
+						horainicioX=Float.parseFloat(auxiliar2case9[2].trim());
 						aulaX=auxiliar2case9[3].trim();
-						mapaGruposX.put("B"+"+"+idX,new Grupo(idX,diaX,horainicioX,aulaX));
+						mapaGruposX.put("B"+"+"+idX,new Grupo("B",idX,diaX,horainicioX,aulaX));
 					}//O mapa dos grupos ira dentro de cada asignatura
 					
 					break;
@@ -326,9 +339,16 @@ public class ordenar {
 			}//Fin do if por se a linea esta vacia
 		}//Fin do for para ler todas as lineas
 		if(existePrerequisitos>0) {
-			mapaAsignaturasX.put(nombreX, new Asignatura(siglasX,nombreX,cursoX,cuatrimestreX,coordinadorX,prerequisitosX,duracionAX,duracionBX,mapaGruposX));
+			//Aqui cambiouse, antes estaba o new directamente no put
+			Asignatura auxi=new Asignatura(siglasX,nombreX,cursoX,cuatrimestreX,coordinadorX,prerequisitosX,duracionAX,duracionBX,mapaGruposX);
+			mapaAsignaturasX.put(nombreX,auxi );
+			auxi.setHorafinalGrupos();
 		}
-		else mapaAsignaturasX.put(nombreX, new Asignatura(siglasX,nombreX,cursoX,cuatrimestreX,coordinadorX,duracionAX,duracionBX,mapaGruposX));
+		else {
+			Asignatura auxi=new Asignatura(siglasX,nombreX,cursoX,cuatrimestreX,coordinadorX,duracionAX,duracionBX,mapaGruposX);
+			mapaAsignaturasX.put(nombreX,auxi );
+			auxi.setHorafinalGrupos();
+		}
 		}//Fin do ford para todas as asignaturas
 		return mapaAsignaturasX;
 	}//Fin do metodo

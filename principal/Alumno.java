@@ -1,11 +1,11 @@
 package principal;
 
-import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.Map;
 import java.util.TreeMap;
 
 import funciones.cambios;
+import funciones.faux;
 
 public class Alumno extends Persona{
 private String email=" ";
@@ -18,12 +18,44 @@ private static int ContadorAlumnos=0;
 //A clave do mapa de asignaturas sera siglas+tipoGrupo se nos referimos as que esta cursando ou
 //solo as siglas que nos referimos a docencia que xa cursou e aprobou
 
+
+
 public static int getalumnostotal() {
 	return ContadorAlumnos;
 }
 
+public void setcuatrimestres(Map<String,Asignatura> mapaAsignaturas) {
+	for(Map.Entry<String, Asignatura> asig: asignaturas.entrySet()) {
+		String aux=faux.getcuatrimestre(asig.getValue().getsiglas(), mapaAsignaturas);
+		asig.getValue().setcuatrimestre(aux);
+	}
+}
+
+public void asigsuperada(String siglas,float nota, String curso) {
+	this.asignaturas.put(siglas, new Asignatura(siglas,curso,nota));
+	this.Gruposlinea5++;
+}
+
+public  void eliminardocencia(String siglas){//Se coinciden as claves, elimina a asignatura do grupo
+	int auxiliar=0;
+	String eliminar=" ";
+	for(Map.Entry<String, Asignatura> asig: this.asignaturas.entrySet()) {
+		if(asig.getKey().contains(siglas)&&asig.getKey().contains("+")) {
+			auxiliar++;
+			eliminar=eliminar+asig.getKey()+";";
+		}
+	}
+	eliminar=eliminar.trim();
+	String[] aux=eliminar.split(";");
+	for(int k=0; k<aux.length;k++) {
+		this.asignaturas.remove(aux[k].trim());
+	}
+	this.Gruposlinea6=this.Gruposlinea6-auxiliar;
+}
+
+
 public void engadirasig(String siglas,Asignatura asig) {
-	Gruposlinea6++;
+	this.Gruposlinea6++;
 	this.asignaturas.put(siglas,asig);
 }
 
@@ -73,7 +105,11 @@ public Alumno(String dniX,String nombreX,GregorianCalendar fechaNacX,GregorianCa
 			this.Gruposlinea5++;
 		}
 	}
-	Gruposlinea6=asignaturas.size()-Gruposlinea5;
+	for(Map.Entry<String, Asignatura> a: asignaturas.entrySet()) {
+		if(a.getKey().contains("+")) {
+			this.Gruposlinea6++;
+		}
+	}
 }
 
 
@@ -89,7 +125,11 @@ public Alumno(String dniX,String nombreX, String emailX,GregorianCalendar fechaN
 			this.Gruposlinea5++;
 		}
 	}
-	Gruposlinea6=asignaturas.size()-Gruposlinea5;
+	for(Map.Entry<String, Asignatura> a: asignaturas.entrySet()) {
+		if(a.getKey().contains("+")) {
+			this.Gruposlinea6++;
+		}
+	}
 }
 
 
@@ -104,7 +144,11 @@ public Alumno(String dniX,String nombreX,GregorianCalendar fechaNacX,GregorianCa
 			this.Gruposlinea5++;
 		}
 	}
-	Gruposlinea6=asignaturas.size()-Gruposlinea5;
+	for(Map.Entry<String, Asignatura> a: asignaturas.entrySet()) {
+		if(a.getKey().contains("+")) {
+			this.Gruposlinea6++;
+		}
+	}
 }
 
 

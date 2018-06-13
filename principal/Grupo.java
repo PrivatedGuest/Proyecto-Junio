@@ -4,17 +4,21 @@ public class Grupo {
 	private String tipo;
 	private String dia;
 	private String aula;
-	private double horaInicio;
+	private float horaInicio;
+	private float horaFinal;
 	private String id;
 
-	public Grupo(String ID, String dia, double HoraInicio, String Aula) {
+public Grupo(String tipo,String ID, String dia, float HoraInicio, String Aula) {
+		this.tipo=tipo;
 		this.id=ID;
 		this.dia=dia;
 		this.horaInicio=HoraInicio;
 		this.aula=Aula;
-	}
-	
-	
+	}	
+public void setHorafinal(String duracion) {
+	float aux=Float.parseFloat(duracion);
+	this.horaFinal=this.horaFinal+aux;
+}
 public String imprimirGrupo() {
 	String aux=id+" "+dia+"  "+horaInicio+"  "+aula;
 	return aux;
@@ -32,9 +36,14 @@ public String getaula() {
 public String getid() {
 	return id;
 }
-public double gethoraInicio(){
+public float gethoraInicio(){
 	return horaInicio;
 }
+
+public float gethorafinal(){
+	return this.horaFinal;
+}
+
 }
 
 

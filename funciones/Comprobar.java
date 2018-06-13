@@ -55,6 +55,8 @@ public class Comprobar {
 			return true;
 		case "matricula":
 			return true;
+		case "evalua":
+			return true;
 		default:
 			return false;
 		}	
