@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import principal.Alumno;
 import principal.Asignatura;
+import principal.Aula;
 import principal.Grupo;
 import principal.Persona;
 import principal.Profesor;
@@ -43,6 +44,16 @@ public class faux {
 		}
 		return false;
 	}
+	public static boolean existeaula(String siglas, Map<String,Aula>mapaAulas) {
+		siglas=siglas.trim();
+		for(Map.Entry<String, Aula> au: mapaAulas.entrySet()) {
+			if(au.getKey().equals(siglas)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	public static boolean grupoyaasignado(Map<String,Persona> mapaPersonas,String siglas,String tipo,String id) {
 		//No mapa dos grupos de cada porfesor usamos como clave "Siglas"+"+"+"tipo"+"+"+"id"
@@ -84,6 +95,47 @@ public class faux {
 		return seguroqueexiste;
 	}
 	
+	public static Profesor getprofesor(String dni,Map<String, Persona> mapaPersonas ) {
+		Profesor seguroqueexiste=null;
+		for(Map.Entry<String, Persona> p: mapaPersonas.entrySet()) {
+			if(p.getValue() instanceof Profesor) {
+			if(p.getKey().equals(dni.trim())) {
+				seguroqueexiste=(Profesor) p.getValue();
+			}}
+	}
+		return seguroqueexiste;
+	}
+	
+	public static Aula getaula(String siglasAULA,Map<String, Aula> mapaAula) {
+		Aula seguroqueexiste=null;
+		for(Map.Entry<String, Aula> au: mapaAula.entrySet()) {
+			if(au.getKey().equals(siglasAULA)) {
+				seguroqueexiste=au.getValue();
+			}
+		}
+		return seguroqueexiste;
+	}
+	
+	public static String getsiglasaula(String siglasASIGNATURA,String tipo,String ID,Map<String, Asignatura> mapaAsignaturas){
+		String devolver="Non se atopo nada en getsiglasaula";
+		for(Map.Entry<String, Asignatura> a:mapaAsignaturas.entrySet()) {
+			if(a.getValue().getsiglas().equals(siglasASIGNATURA)) {
+				Asignatura asig=a.getValue();//A asignatura correspondente
+				//Facemos un bucle para os grupos desa asignatura,cando coincidan collemos a aula
+				for(Map.Entry<String, Grupo>g:asig.getmapagrupos().entrySet()) {
+					Grupo grup= g.getValue();
+					if(grup.gettipo().equals(tipo)&&grup.getid().equals(ID)) {
+						devolver=grup.getaula();
+						return devolver;
+					}
+				}
+			}
+		}
+		return devolver;
+	}
+	
+	
+	
 	public static String quitarespacios(String linea) {
 		while(linea.contains("  ")) {
 			linea=linea.replace("  ", " ");
@@ -119,7 +171,16 @@ public class faux {
 	 }
 	
 	 
-	 public static String obterhorariogrupo(Asignatura asignatura,String tipo,String id){
+	 public static boolean profesordaclase(Profesor prof,String siglas) {
+		 for(Map.Entry<String, Asignatura> asig: prof.getasignaturas().entrySet()) {
+			 if(asig.getKey().contains(siglas)) {
+				 return true;
+			 }
+		 }
+		 return false;
+	 }
+	 
+	 public static String gethorariogrupo(Asignatura asignatura,String tipo,String id){
 		 String devolver="";
 		 for(Map.Entry<String, Grupo> g: asignatura.getmapagrupos().entrySet()) {
 			 if(g.getKey().contains(tipo)&&g.getKey().contains(id)) {
@@ -138,19 +199,29 @@ public class faux {
 		 return "MAL EN GETCUATRIMESTRE";
 	 }
 	 
+	 public static String getcurso(String siglas,Map<String,Asignatura> mapaAsignaturas) {
+		 for(Map.Entry<String, Asignatura> asig: mapaAsignaturas.entrySet()) {
+			 if(asig.getValue().getsiglas().equals(siglas)) {
+				 return asig.getValue().getcurso();
+			 }
+		 }
+		 return "MAL EN GETCURSO";
+	 }
 	 
-	 public static boolean existesolapealumno(Alumno alu,String cuatrimestre,String dia,String horainici,String horafina,Map<String,Asignatura> mapaAsignaturas) {
+	 public static boolean existesolapealumno(Alumno alu,String curso,String cuatrimestre,String dia,String horainici,String horafina,Map<String,Asignatura> mapaAsignaturas) {
 		 float hini=Float.parseFloat(horainici);
 		 float hfin=Float.parseFloat(horafina);
+		 //String horario
 		 for(Map.Entry<String, Asignatura> a: mapaAsignaturas.entrySet()) {
 			 Asignatura asig=a.getValue();
 /*A clave de asigalu sera Sigla+"+"+"A/B/M", o bucle fai que se repita esto para quec oincida nalgunha
 asignatura e non se solape.A clave do mapa global solo sera as siglas, asique se coinciden as siglas deberan
 estar dentro de diglas+"+"...A maiores temos que asegurarnos qu esten no miso cuatrimestre
  */
-				 if(faux.alumnomatriculado(alu, a.getKey())&&a.getValue().getcuatrimestre().equals(cuatrimestre)){
+				 if(faux.alumnomatriculado(alu, a.getKey())&&a.getValue().getcuatrimestre().equals(cuatrimestre)&&a.getValue().getcurso().equals(curso)){
+					 //Se esta matriculado nesa asignaturas e coindice o cuatrimestre
 			 		for(Map.Entry<String, Grupo> g: asig.getmapagrupos().entrySet()) {
-			 			//Esta matriculado e no mesmo cuatri,miramos todos os grupos
+			 			//iramos todos os grupos de esa asignatura
 			 				Grupo grup=g.getValue();
 			 				float hiniX=grup.gethoraInicio();
 			 				float hfinX=grup.gethorafinal();
@@ -161,9 +232,49 @@ estar dentro de diglas+"+"...A maiores temos que asegurarnos qu esten no miso cu
 			 				}//Fin do if do dia(para solape)	 
 			 		}//Fin do for para todos os grupos			 
 		 }//Fin da condicional de coincidir cuatrimestre e estar matriculado
-		 }
+		 }//for para todas as asignaturas
 		 return false;
 	 }
+	public static boolean existesolapealumno2(String horario,String curso,String cuatrimestre,String dia,String  horainicio,String  horafinal) {
+		String[] linea=horario.split("\n");
+		float hini=Float.parseFloat(horainicio);
+		float hfin=Float.parseFloat(horafinal);
+		for(int i=0; i<linea.length;i++) {
+			String[] datos=linea[i].split(" ");
+			String cursoX=datos[0].trim();
+			String cuatriX=datos[1].trim();
+			String diaX=datos[2].trim();
+			float iniX=Float.parseFloat(datos[3].trim());
+			float finX=Float.parseFloat(datos[4].trim());
+			if(cursoX.equals(curso)&&cuatriX.equals(cuatrimestre)&&diaX.equals(dia)){
+				//mismo curso cuatri e dia
+				if(iniX==hini||(iniX>hini&&iniX<hfin)) {
+					return true;//hai solape
+				}
+			}
+		}//para todas as linea para ver se hai solape nalgunha
+		return false;
+	}
+	 
+	 public static boolean existesolapeprofesor(String horario,String cuatrimestre,String dia,String horainici,String horafina) {
+		 float hini=Float.parseFloat(horainici);
+		 float hfin=Float.parseFloat(horafina);
+		 String[] linea=horario.split("\n");
+		 for(int i=0; i<linea.length;i++) {
+				String[] datos=linea[i].split(" ");
+				String cuatriX=datos[1].trim();
+				String diaX=datos[2].trim();
+				float iniX=Float.parseFloat(datos[3].trim());
+				float finX=Float.parseFloat(datos[4].trim());
+				if(cuatriX.equals(cuatrimestre)&&diaX.equals(dia)){
+					//mismo cuatri e dia
+					if(iniX==hini||(iniX>hini&&iniX<hfin)) {
+						return true;//hai solape
+					}
+				}
+			}//para todas as linea para ver se hai solape nalgunha
+			return false;
+		}
 	 
 	 
 	 public static boolean prerequisitos(Alumno alumno,String prerequisitos) {

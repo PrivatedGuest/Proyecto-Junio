@@ -3,6 +3,8 @@ package principal;
 import java.util.Map;
 import java.util.TreeMap;
 
+import funciones.faux;
+
 public class Asignatura {
  private int numeroGruposA=0;
  private int numeroGruposB=0;
@@ -15,10 +17,11 @@ public class Asignatura {
  private String duracionA;
  private String duracionB;
  private String coordinador;
- private String grupo;
+ private String tipo;
  private String identificadorA;
  private String identificadorB;
  private String identificadorM;
+ //O usar a "M" non podemos poñer solo identificador
  private Map<String,Grupo> mapagrupos=new TreeMap<String,Grupo>();//A key sera "A"+"+"+idX ou "B"+"+"+idX
  //IdentificadorM usarase para as asignaturas que nn teñan ningun grupo asignado, non podemos usar SOLO a asignaturas
  //de clave porque daría problemas coas asignaturas xa superadas, asique usamos 'Sigla+M' e sabemos que se refire a que non ten grupo
@@ -70,21 +73,41 @@ public class Asignatura {
 	 this.curso=cursoX;
 	 this.nota=String.valueOf(notaX);
 }
- public Asignatura(String siglasX,String grupoX,String identificadorX) {
+ public Asignatura(String siglasX,String tipoX,String identificadorX) {
 	 this.siglas=siglasX;
-	 this.grupo=grupoX;
-	 if(grupoX.equals("A")){
+	 this.tipo=tipoX;
+	 if(tipoX.equals("A")){
 		 this.identificadorA=identificadorX;
 	 }
-	 else  if(grupoX.equals("B")){
+	 else  if(tipoX.equals("B")){
 		 this.identificadorB=identificadorX;
 	 }
-	 else System.out.println("Fallo no constructor de asignatura, non se reconoce o tipo do grupo    "+grupoX);
+	 else System.out.println("Fallo no constructor de asignatura, non se reconoce o tipo do grupo    "+tipoX);
  }
  
- public void setHorafinalGrupos() {
+ 
+ public Asignatura(String siglasX,String tipoX,String identificadorX,Map<String, Asignatura> mapaAsignaturas,Map<String, Aula> mapaAula) {
+	 this.siglas=siglasX;
+	 this.tipo=tipoX;
+	 String aula=faux.getsiglasaula(siglasX, tipoX, identificadorX, mapaAsignaturas);
+	 Aula aux=faux.getaula(aula, mapaAula);
+	 aux.nuevoalumno();
+	 //aqui chamar a get aula para despois facer aula++
+	 
+	 if(tipoX.equals("A")){
+		 this.identificadorA=identificadorX;
+	 }
+	 else  if(tipoX.equals("B")){
+		 this.identificadorB=identificadorX;
+	 }
+	 else System.out.println("Fallo no constructor de asignatura, non se reconoce o tipo do grupo    "+tipoX);
+ }
+ 
+ 
+ 
+ public void setHorafinalGrupos(){
 	 if(mapagrupos!=null) {
-	 for(Map.Entry<String, Grupo> g: this.mapagrupos.entrySet()) {
+	 for(Map.Entry<String, Grupo> g: this.mapagrupos.entrySet()){
 		 if(g.getValue().gettipo().equals("A")) {
 			 g.getValue().setHorafinal(this.duracionA);
 		 }
@@ -134,8 +157,8 @@ public class Asignatura {
 	 return siglas;
  }
 
- public String getgrupo() {
-	 return grupo;
+ public String gettipo() {
+	 return tipo;
  }
  public String getnombre() {
 	 return nombre;

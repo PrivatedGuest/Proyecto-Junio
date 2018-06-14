@@ -6,6 +6,7 @@ import java.util.Map;
 
 import principal.Alumno;
 import principal.Asignatura;
+import principal.Aula;
 import principal.Grupo;
 import principal.Persona;
 import principal.Profesor;
@@ -213,7 +214,7 @@ public class Fprincipales{
 	}
 	
 	
-	public static Map<String,Persona> AsignarGrupo(Map<String,Persona> mapaPersonas,Map<String,Asignatura> mapaAsignaturas,String comando){
+	public static Map<String,Persona> AsignarGrupo(Map<String,Persona> mapaPersonas,Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAula,String comando){
 		int errores=0;
 		String[] aux=comando.split(" ");
 		String perfilX= aux[1].trim().toLowerCase();
@@ -223,6 +224,7 @@ public class Fprincipales{
 		String idX=aux[5].trim();
 		Asignatura asigX = null;
 		Alumno alu	=	null;
+		Profesor prof=null;
 		int errorasig=0;
 		if(perfilX.equals("profesor")&&!faux.existepersona(dniX, mapaPersonas)) {
 			errores++;
@@ -230,9 +232,9 @@ public class Fprincipales{
 		}
 		else if(perfilX.equals("alumno")&&!faux.existepersona(dniX, mapaPersonas)) {
 			errores++;
-			Escribirtxt.Avisos("Profesor inexistente");
+			Escribirtxt.Avisos("Alumno inexistente");
 		}
-		if(faux.existeasignatura(siglasX, mapaAsignaturas)) {
+		if(!faux.existeasignatura(siglasX, mapaAsignaturas)) {
 			errorasig++;
 			errores++;
 			Escribirtxt.Avisos("Asignatura inexistente");
@@ -273,20 +275,87 @@ public class Fprincipales{
 		 */
 		//TEÑO QUE COLLER TODOS OS GRUPOS DO ALUMNO COS IDS E BUSCAR NO MAPA DAS ASIGNATURAS SE SE SOLAPA
 		//TENDO EN CONTA A DURACION DE CADA GRUPO
-		if(asigX!=null) {
-		String horario=faux.obterhorariogrupo(asigX, tipoX, idX);
+		if(errorasig==0) {
+		String horario=faux.gethorariogrupo(asigX, tipoX, idX);
 		String[] auxi=horario.split(" ");
 		String dia= auxi[0];
 		String horainicio=auxi[1];
 		String horafinal=auxi[2];
 		String cuatrimestre=faux.getcuatrimestre(siglasX, mapaAsignaturas).trim();
-		if(faux.existesolape(alu,cuatrimestre,dia, horainicio, horafinal, mapaAsignaturas)) {
+		String curso=faux.getcurso(siglasX, mapaAsignaturas);
+				if(perfilX.toLowerCase().equals("alumno")) {
+					alu=faux.getalumno(dniX, mapaPersonas);
+						if(faux.existesolapealumno(alu,curso,cuatrimestre,dia, horainicio, horafinal, mapaAsignaturas)) {
+							errores++;
+							Escribirtxt.Avisos("Solape alumno");
+						}
+						String siglasAula=faux.getsiglasaula(siglasX, tipoX, idX, mapaAsignaturas);
+						Aula auxil= faux.getaula(siglasAula, mapaAula);
+						if(auxil.lleno()) {
+							errores++;
+							Escribirtxt.Avisos("Aula completa");
+						}
+				}
+				if(perfilX.toLowerCase().equals("profesor")) {
+					prof=faux.getprofesor(dniX, mapaPersonas);
+					String horarioprof=prof.gethorario(mapaAsignaturas);
+						if(faux.existesolapeprofesor(horarioprof,cuatrimestre, dia, horainicio, horafinal)) {
+							errores++;
+							Escribirtxt.Avisos("Solape profesor");
+						}}	
+		}//fin de errorasig=0
+		return mapaPersonas;	
+	}
+	
+	public static Map<String,Asignatura> CreaGrupoAsig(Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAulas,String comando){
+		comando= faux.quitarespacios(comando.trim());
+		String[] aux= comando.split(" ");
+		String siglasX=aux[1].trim();
+		String tipoX=aux[2].trim();
+		String idX=aux[3].trim();
+		String diaX=aux[4].trim();
+		float hiniX=Float.parseFloat(aux[4].trim());
+		String siglasAULAX=aux[5].trim();
+		Asignatura asig = null;
+		int errores=0;
+		if(!faux.existeasignatura(siglasX, mapaAsignaturas)) {
 			errores++;
-			//Escribirtxt.Avisos(imprimir);
+			Escribirtxt.Avisos("Asignatura inexistente");
 		}
+		else asig=faux.getasignatura(siglasX, mapaAsignaturas);
+		if(!tipoX.equals("A")&&!tipoX.equals("B")){
+			errores++;
+			Escribirtxt.Avisos("Tipo de grupo incorrecto");
 		}
-		return mapaPersonas;
+		String clavegrupo=tipoX+"+"+idX;
+		if(!faux.existegrupo(clavegrupo, asig.getmapagrupos())) {
+			errores++;
+			Escribirtxt.Avisos("Grupo ya existente");
+		}
+		if(!diaX.equals("L")&&!diaX.equals("M")&&!diaX.equals("X")&&!diaX.equals("J")&&!diaX.equals("V")) {
+			errores++;
+			Escribirtxt.Avisos("Dia incorrecto");
+		}
+		if(!faux.existeaula(siglasAULAX, mapaAulas)) {
+			errores++;
+			Escribirtxt.Avisos("Aula no existente");
+		}
+		/*FALTA
+		 * O
+		 * SOLAPE
+		 * DE
+		 * AULAS
+		 * E
+		 * A
+		 * FUNCION
+		 * POSTERIOR
+		 */
 		
+		
+		
+		
+		
+		return mapaAsignaturas;
 	}
 	
 	

@@ -19,6 +19,43 @@ private static int ContadorAlumnos=0;
 //solo as siglas que nos referimos a docencia que xa cursou e aprobou
 
 
+public String gethorario(Map<String,Asignatura>mapaAsigGLOB) {
+	String devolver="";
+	for(Map.Entry<String, Asignatura> asigX:this.asignaturas.entrySet()) {
+		//Para todas as asignaturas do alumno
+		if(asigX.getKey().contains("+")&&!asigX.getKey().contains("+M")) {
+			/*Se esta en aprobada non a queremos, senon ten grupo tampoco(xa que nn sabemos o horario)*/
+			for(Map.Entry<String, Asignatura> asigGLOB:mapaAsigGLOB.entrySet()) {
+//A clave no mapa do alumno sera siglas+tipo e as do mapa global solo siglas
+				if(asigX.getKey().contains(asigGLOB.getValue().getsiglas())) {
+					Asignatura auxiliar=asigGLOB.getValue();
+					//Ahora estamos na mesma asignatura!!
+					//Ahora miramos todos os grupos!!
+					String identificador = null;
+					if(asigX.getKey().contains("A")) {
+						identificador=asigX.getValue().getidentificadorA();
+					}
+					else if(asigX.getKey().contains("B")) {
+						identificador=asigX.getValue().getidentificadorB();
+					}
+					//Co codigo de arriba obtemos o identificador da asignatura
+					else System.out.println("FALLO EN GETHORARIO, SALTA UN IDENTIFICADOR QUE NON E A NIN B");
+					for(Map.Entry<String, Grupo> grupX:auxiliar.getmapagrupos().entrySet()) {
+						//se coincide o TIPO e o ID
+						
+						if(asigX.getKey().contains(grupX.getValue().gettipo())&&identificador.equals(grupX.getValue().getid())){
+							Grupo paradatos=grupX.getValue();
+							devolver=devolver+auxiliar.getcurso()+" "+auxiliar.getcuatrimestre()+" "+paradatos.getdia()+" "+paradatos.gethoraInicio()+" "+paradatos.gethorafinal()+" "+paradatos.getaula()+"\r\n";
+							//Formato: cuatrimestre dia horainicio horafinal aula		
+						}
+					}//Fin do for para todos os grupos da asignatura que coincidiu
+				}//fin do if(se e esa asignatura)			
+			}//Fin do for para todas as asignaturas	do arquivo	
+		}//fin do if	
+	}//fin do for para todas as asignaturas do alumno
+	return devolver;
+}
+
 
 public static int getalumnostotal() {
 	return ContadorAlumnos;
@@ -192,9 +229,9 @@ public String impasig() {
 			}
 			else {
 					if(a.getKey().contains("+A")) {
-						aux=aux+a.getValue().getsiglas()+" "+a.getValue().getgrupo()+" "+a.getValue().getidentificadorA();
+						aux=aux+a.getValue().getsiglas()+" "+a.getValue().gettipo()+" "+a.getValue().getidentificadorA();
 					}
-					else aux=aux+a.getValue().getsiglas()+" "+a.getValue().getgrupo()+" "+a.getValue().getidentificadorB();
+					else aux=aux+a.getValue().getsiglas()+" "+a.getValue().gettipo()+" "+a.getValue().getidentificadorB();
 			}
 			if(contador<this.Gruposlinea6) {
 				aux=aux+" ; ";

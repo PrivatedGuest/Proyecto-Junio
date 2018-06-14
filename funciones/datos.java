@@ -5,6 +5,7 @@ public class datos {
 	public static final String direccionprof="profesores.txt";
 	public static final String direccionasig="asignaturas.txt";
 	public static final String direccioncurso="curso academico.txt";
+	public static final String direccionaula="aulas.txt";
 	private static String curso="";
 	private static String semanainicio="";
 	public static void iniciocurso(String linea) {

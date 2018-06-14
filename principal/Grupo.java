@@ -17,7 +17,7 @@ public Grupo(String tipo,String ID, String dia, float HoraInicio, String Aula) {
 	}	
 public void setHorafinal(String duracion) {
 	float aux=Float.parseFloat(duracion);
-	this.horaFinal=this.horaFinal+aux;
+	this.horaFinal=this.horaInicio+aux;
 }
 public String imprimirGrupo() {
 	String aux=id+" "+dia+"  "+horaInicio+"  "+aula;

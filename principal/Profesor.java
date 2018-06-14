@@ -12,9 +12,9 @@ public class Profesor extends Persona{
 private String categoria;
 private String departamento;
 private GregorianCalendar fechaNac;
-private Map<String,Asignatura> asignaturas=new TreeMap<String,Asignatura>();
 private int Gruposlinea5=0;
 private int Gruposlinea6=0;
+private Map<String,Asignatura> asignaturas=new TreeMap<String,Asignatura>();
 private static int ContadorProfesores=0;
 
 
@@ -24,6 +24,32 @@ public void setcuatrimestres(Map<String,Asignatura> mapaAsignaturas) {
 		asig.getValue().setcuatrimestre(aux);
 	}
 }
+
+
+public String gethorario(Map<String,Asignatura>mapaAsigGLOB) {
+	String devolver="";
+	for(Map.Entry<String, Asignatura> asigX:this.asignaturas.entrySet()) {
+		//Para todas as asignaturas do alumno
+			for(Map.Entry<String, Asignatura> asigGLOB:mapaAsigGLOB.entrySet()) {
+//A clave no mapa do profesor era siglas+tipo+id e as do mapa global o nombre
+				if(asigX.getKey().contains(asigGLOB.getValue().getsiglas())) {
+					Asignatura auxiliar=asigGLOB.getValue();
+					//Ahora estamos na mesma asignatura!!
+					//Ahora miramos todos os grupos!!
+					for(Map.Entry<String, Grupo> grupX:auxiliar.getmapagrupos().entrySet()) {
+						//se coincide o TIPO e o ID			
+						if(asigX.getKey().contains(grupX.getValue().gettipo())&&asigX.getKey().contains(grupX.getValue().getid())){
+							Grupo paradatos=grupX.getValue();
+							devolver=devolver+auxiliar.getcurso()+" "+auxiliar.getcuatrimestre()+" "+paradatos.getdia()+" "+paradatos.gethoraInicio()+" "+paradatos.gethorafinal()+" "+paradatos.getaula()+"\r\n";
+							//Formato: cuatrimestre dia horainicio horafinal aula		
+						}
+					}//Fin do for para todos os grupos da asignatura que coincidiu
+				}//fin do if(se e esa asignatura)			
+			}//Fin do for para todas as asignaturas	do arquivo		
+	}//fin do for para todas as asignaturas do alumno
+	return devolver;
+}	
+
 
 
 public String getcategoria() {
@@ -119,9 +145,9 @@ public String impasig() {
 			}
 			else {
 					if(a.getKey().contains("+A")) {
-						aux=aux+a.getValue().getsiglas()+" "+a.getValue().getgrupo()+" "+a.getValue().getidentificadorA();
+						aux=aux+a.getValue().getsiglas()+" "+a.getValue().gettipo()+" "+a.getValue().getidentificadorA();
 					}
-					else aux=aux+a.getValue().getsiglas()+" "+a.getValue().getgrupo()+" "+a.getValue().getidentificadorB();
+					else aux=aux+a.getValue().getsiglas()+" "+a.getValue().gettipo()+" "+a.getValue().getidentificadorB();
 			}
 			if(contador<this.Gruposlinea6) {
 				aux=aux+" ; ";

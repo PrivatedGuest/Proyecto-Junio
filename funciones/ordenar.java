@@ -8,13 +8,14 @@ import java.util.TreeMap;
 
 import principal.Alumno;
 import principal.Asignatura;
+import principal.Aula;
 import principal.Grupo;
 import principal.Persona;
 import principal.Profesor;
 
 public class ordenar {
 	
-	public static Map<String,Persona> alumnos(String[] todos,Map<String,Asignatura> mapaAsignaturas) {
+	public static Map<String,Persona> alumnos(String[] todos,Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAulas) {
 		Map<String,Persona> mapaPersonaX= new TreeMap<String,Persona>();
 		int contadorAlumnos;
 		Map<String,Asignatura> asignaturas = null;
@@ -105,7 +106,7 @@ public class ordenar {
 										String tipoX =auxiliar2case6[1].trim();
 										String identificadorX=auxiliar2case6[2].trim();
 										String aux=siglaX+"+"+tipoX;
-										asignaturas.put(aux, new Asignatura(siglaX,tipoX,identificadorX));		
+										asignaturas.put(aux, new Asignatura(siglaX,tipoX,identificadorX,mapaAsignaturas,mapaAulas));		
 									}
 							}
 						}	//salimos do switch
@@ -352,4 +353,31 @@ public class ordenar {
 		}//Fin do ford para todas as asignaturas
 		return mapaAsignaturasX;
 	}//Fin do metodo
-}
+
+	
+	
+	public static Map<String,Aula> aulas(String[] todos){
+		Map<String,Aula> mapaAsignaturasX= new TreeMap<String,Aula>();
+		int contador=0;
+		for(int i=0;i<todos.length;i++) {	
+			
+			String[] aux=todos[i].split("\n");
+			if(contador>0) {
+				int w=1;
+				for(w=1;w<aux.length;w++)
+					aux[w-1]=aux[w];//Indice W pasa a ser W+1
+					aux[w-1]=" ";//o salir do for sale w+1, para eliminar o ultimo eliminamos w-1 xa que sale incrementada, tamen se pode facer co length
+					aux[w-1]=aux[w-1].trim();
+			}
+			contador++;
+			String siglas=faux.quitarespacios(aux[0].trim());
+			String tipo=faux.quitarespacios(aux[1].trim());
+			String capacidad=faux.quitarespacios(aux[2].trim());
+			
+			
+			
+			mapaAsignaturasX.put(siglas, new Aula(siglas,tipo,capacidad));						
+		}
+		
+		return mapaAsignaturasX;
+	}}

@@ -7,10 +7,11 @@ import java.util.TreeMap;
 
 import principal.Alumno;
 import principal.Asignatura;
+import principal.Aula;
 import principal.Persona;
 
 public class leertxt {
-	public static Map<String, Persona> leeralumno(String direccion,Map<String,Asignatura> mapaAsignaturas){
+	public static Map<String, Persona> leeralumno(String direccion,Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAulas){
 			Map<String,Persona> mapaAlumnoX= new TreeMap<String,Persona>();	
 			String todo="     ";
 			String[] todos;
@@ -25,7 +26,7 @@ public class leertxt {
 				System.out.println("Fichero inexistente: "+direccion);
 		}
 			todos=todo.split("[*]");
-				mapaAlumnoX.putAll(ordenar.alumnos(todos,mapaAsignaturas));
+				mapaAlumnoX.putAll(ordenar.alumnos(todos,mapaAsignaturas,mapaAulas));
 				return mapaAlumnoX;				
 	}
 	
@@ -44,8 +45,7 @@ public class leertxt {
 		devolver=devolver.replaceAll("\n", " ");
 		devolver=devolver.trim();
 		devolver=faux.quitarespacios(devolver);
-		return devolver;
-		
+		return devolver;	
 	}
 	
 	public static Map<String, Persona> leerprofesor(String direccion,Map<String,Asignatura> mapaAsignaturas){
@@ -91,6 +91,26 @@ public class leertxt {
 		todos=todo.split("[*]");
 		mapaAsignaturasX.putAll(ordenar.asignaturas(todos));
 		return mapaAsignaturasX;
-		
 		}
+	
+	
+	public static Map<String,Aula> leeraulas(String direccion){
+		Map <String,Aula> mapaAulasX= new TreeMap<String,Aula>();
+		String todo=" ";
+		String[] todos;
+		try {
+			String bfRead;
+			BufferedReader read= new BufferedReader(new FileReader(direccion));
+			while((bfRead=read.readLine())!= null) {//Fai o ciclo mentras o ficheiro teña datos
+				todo= todo + bfRead+"\r\n";}
+			read.close();
+		}catch(Exception e) {
+			System.out.println("Fichero inexistente: "+direccion);
+		}
+		todos=todo.split("[*]");
+		mapaAulasX.putAll(ordenar.aulas(todos));
+		return mapaAulasX;
+	}
+	
+	
 	}
