@@ -25,15 +25,142 @@ public class faux {
 		return false;
 	}
 	
-	public static boolean existegrupo(String linea,Map<String,Grupo> mapaGrupos) {
+	public static boolean existegrupo(String tipoMASid,Map<String,Grupo> mapaGrupos) {
 		for(Map.Entry<String, Grupo> g: mapaGrupos.entrySet()) {
-			if(g.getValue().getid().equals(linea)) {
+			if(g.getKey().equals(tipoMASid)) {
 				return true;
 			}
 		}
 		return false;	
 	}
 	
+	
+	public static String[][] getformatotabla(String horario) {
+		//siglasasignatura grupo identificaor;SiglasProfesor;Cuatrimestre Dia Horaini Horafin
+		String[] linea=horario.split("\n");
+		String[][] devolver = new String[20][6];
+		for(int i=0;i<=19;i++) {
+			//vamos imprimir os bordes do horario
+			for(int k=0;k<=5;k++) {
+			devolver[i][k]="vacio";				
+			}}
+			devolver[0][0]="hora";
+			devolver[0][1]="L";
+			devolver[0][2]="M";
+			devolver[0][3]="X";
+			devolver[0][4]="J";
+			devolver[0][5]="V";
+			for(int i=2;i<=10;i=i+2) {
+				devolver[i][0]=" ";
+			}
+			devolver[1][0]="9-10";
+			devolver[3][0]="10-11";
+			devolver[5][0]="11-12";
+			devolver[7][0]="12-13";
+			devolver[9][0]="13-14";
+			devolver[11][0]="14-15";	
+			for(int i=1;i<=5;i++) {
+				devolver[11][i]="XXXXXX";
+			}
+			for(int i=13;i<=19;i=i+2) {
+				devolver[i][0]=" ";
+			}
+			devolver[12][0]="15-16";
+			devolver[14][0]="16-17";
+			devolver[16][0]="17-18";
+			devolver[18][0]="18-19";
+			//Ata aqui imprime os bordes
+			for(int i=0;i<=19;i++) {
+				for(int k=0;k<=5;k++) {
+					devolver[i][k]=devolver[i][k].trim();
+					if(devolver[i][k].equals("vacio")) {
+						devolver[i][k]=devolver[i][k].replace("vacio", " ");
+					}
+				}
+			}
+			//Tiñamos o formato ahora escribimos asignaturas
+		for(int i=0;i<linea.length;i++) {
+			String[] datos=linea[i].split(";");
+			datos[0]=faux.quitarespacios(datos[0].trim());
+			datos[1]=faux.quitarespacios(datos[1].trim());
+			datos[2]=faux.quitarespacios(datos[2].trim());
+			String[] aux1=datos[0].trim().split(" ");
+			String[] aux2=datos[2].split(" ");
+			String siglasASIG=aux1[0].trim();
+			String tipoGRUPO=aux1[1].trim();
+			String identificadorGRUPO=aux1[2].trim();
+			String siglasPROF=datos[1];	
+			String cuatrimestre=aux2[0];
+			String dia=aux2[1];
+			String horainicio=aux2[2];
+			String horafinal=aux2[3];
+			float duracion=Float.parseFloat(horafinal)-Float.parseFloat(horainicio);
+			int columna=0;
+			int fila=0;
+			switch (dia) {
+				case "L":
+					columna=1;
+					break;
+				case "M":
+					columna=2;
+					break;
+				case "X":
+					columna=3;
+					break;
+				case "J":
+					columna=4;
+					break;
+				case "V":
+					columna=5;
+					break;
+				default :
+					System.out.println("Dia incorrecto");
+			}
+			switch(horainicio) {
+			case "9.0":
+				fila=1;
+				break;
+			case "10.0":
+				fila=3;
+				break;
+			case "11.0":
+				fila=5;
+				break;
+			case "12.0":
+				fila=7;
+				break;
+			case "13.0":
+				fila=9;
+				break;
+			case "15.0":
+				fila=12;
+				break;
+			case "16.0":
+				fila=14;
+				break;
+			case "17.0":
+				fila=16;
+				break;
+			case "18.0":
+				fila=18;
+				break;
+			}
+			//Ahora xa timos a fila e a columna onde queremos meter todo
+			//cuidado con mais de unespacio en blanco
+		devolver[fila][columna]=siglasASIG+"-"+tipoGRUPO+identificadorGRUPO;
+		devolver[fila+1][columna]=datos[1].trim();
+		if(duracion==2) {
+			devolver[fila+2][columna]=siglasASIG+"-"+tipoGRUPO+identificadorGRUPO;
+			devolver[fila+3][columna]=datos[1].trim();
+		}
+			
+		}//Fin de para todas as asignaturas
+			
+			
+			
+			
+		return devolver;
+	}
 	
 	public static boolean existeasignatura(String linea,Map<String,Asignatura> mapaAsignaturas) {
 		linea=linea.trim();
@@ -54,6 +181,40 @@ public class faux {
 		return false;
 	}
 	
+	public static boolean existealumno(String linea, Map<String,Persona> mapaPersonas) {
+		for(Map.Entry<String, Persona> p: mapaPersonas.entrySet()) {
+			if(p.getValue().getdni().equals(linea) && p.getValue() instanceof Alumno) {				
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	public static String getsiglasprofesor(String SiglasASIG,String tipoGrupo,String idGRUPO,Map<String,Persona> mapaPersonas) {
+		String devolver="Non existe o profesor";
+		for(Map.Entry<String, Persona> p:mapaPersonas.entrySet()) {
+			if(p.getValue() instanceof Profesor) {
+				Profesor prof=(Profesor) p.getValue();
+				for(Map.Entry<String, Asignatura> a:prof.getasignaturas().entrySet()) {
+					if(a.getKey().contains(SiglasASIG)&&a.getKey().contains(tipoGrupo)&&a.getKey().contains(idGRUPO)) {
+						devolver=faux.getiniciales(prof.getnombre());
+					}
+				}//Para todas as asignaturas(encontrar o profesor que da nese grupo)
+			}
+		}//Para todos os profesores
+		return devolver;
+		}
+	
+	public static String getiniciales(String nombre){
+		String[] aux1=nombre.split(",");
+		String SiglaNombre=String.valueOf(aux1[1].trim().charAt(0));
+		String[] aux2=aux1[0].split(" ");
+		String SiglaApellido1=String.valueOf(aux2[0].trim().charAt(0));
+		String SiglaApellido2=String.valueOf(aux2[1].trim().charAt(0));
+		return SiglaNombre+SiglaApellido1+SiglaApellido2;
+	}
+		
+	
 	
 	public static boolean grupoyaasignado(Map<String,Persona> mapaPersonas,String siglas,String tipo,String id) {
 		//No mapa dos grupos de cada porfesor usamos como clave "Siglas"+"+"+"tipo"+"+"+"id"
@@ -63,7 +224,9 @@ public class faux {
 			if(p.getValue() instanceof Profesor) {
 				profi=(Profesor) p.getValue();//ahora temos un profesor da lista(e asi con todos)
 				for(Map.Entry<String, Asignatura> asig:profi.getasignaturas().entrySet()) {
-					if(asig.getKey().contains(siglas)&&asig.getKey().contains(tipo)&&asig.getKey().contains(id)) {
+					int aux= asig.getKey().indexOf("+");
+					String auxiliar=asig.getKey().substring(0, aux);
+					if(asig.getKey().equals(auxiliar)&&asig.getKey().contains(tipo)&&asig.getKey().contains(id)) {
 						return true;
 					}
 				}//fin do bucle para todos os grupos do profesor
@@ -105,6 +268,18 @@ public class faux {
 	}
 		return seguroqueexiste;
 	}
+	
+	public static Persona getprofesorporNombre(String Nombre,Map<String, Persona> mapaPersonas) {
+		Profesor seguroqueexiste=null;
+		for(Map.Entry<String, Persona> p: mapaPersonas.entrySet()) {
+			if(p.getValue() instanceof Profesor) {
+			if(p.getValue().getnombre().equals(Nombre.trim())) {
+				seguroqueexiste=(Profesor) p.getValue();
+			}}
+		
+	}
+		return seguroqueexiste;
+}
 	
 	public static Aula getaula(String siglasAULA,Map<String, Aula> mapaAula) {
 		Aula seguroqueexiste=null;
@@ -268,8 +443,11 @@ estar dentro de diglas+"+"...A maiores temos que asegurarnos qu esten no miso cu
 				float finX=Float.parseFloat(datos[4].trim());
 				if(cuatriX.equals(cuatrimestre)&&diaX.equals(dia)){
 					//mismo cuatri e dia
-					if(iniX==hini||(iniX>hini&&iniX<hfin)) {
+					if(iniX==hini) {
 						return true;//hai solape
+					}
+					if((iniX>hini&&iniX<hfin)) {
+						return true;
 					}
 				}
 			}//para todas as linea para ver se hai solape nalgunha

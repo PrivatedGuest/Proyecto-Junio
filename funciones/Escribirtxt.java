@@ -2,6 +2,8 @@ package funciones;
 
 import java.io.*;
 import java.util.Map;
+import java.util.Map.*;
+
 import principal.Alumno;
 import principal.Persona;
 import principal.Profesor;
@@ -69,6 +71,39 @@ public class Escribirtxt {
 				}
 				}
 } 
+ 
+ public static void FicheroPrueba(String imprimir) {
+	 FileWriter escritura=null;
+	 try {
+		 File archivo=new File("archivoprueba.txt");
+		 if(archivo.exists()) {
+			 escritura= new FileWriter("archivoprueba.txt",true);
+		 }
+		 else escritura= new FileWriter("archivoprueba.txt");
+		 escritura.write(imprimir);
+		 escritura.close();
+		 }catch(Exception e) {
+			 System.out.println(e.getMessage());
+		 }		 
+ }
+ 
+ public static void EscribirPODteorico(Map<String, Float> listaPODordenada, Map<String,Persona> mapaPersonas,String salida) {
+	 FileWriter escritura=null;
+	 try {
+		 File archivo=new File(salida);
+		 if(archivo.exists()) {
+			 escritura= new FileWriter(salida,true);
+		 }
+		 else escritura= new FileWriter(salida);
+	        for (Entry<String, Float> entry : listaPODordenada.entrySet()) {
+	            escritura.write(entry.getKey()+"; "+(faux.getprofesorporNombre(entry.getKey(), mapaPersonas)).getdni()+"; "+entry.getValue()+"\r\n");
+	            System.out.println(entry.getKey()+"; "+(faux.getprofesorporNombre(entry.getKey(), mapaPersonas)).getdni()+"; "+entry.getValue()+"\r\n");
+	        } 
+		  		escritura.close();
+		 }catch(Exception e) {
+			 System.out.println(e.getMessage());
+		 }  
+ }
  
  
  

@@ -342,7 +342,7 @@ public class ordenar {
 		if(existePrerequisitos>0) {
 			//Aqui cambiouse, antes estaba o new directamente no put
 			Asignatura auxi=new Asignatura(siglasX,nombreX,cursoX,cuatrimestreX,coordinadorX,prerequisitosX,duracionAX,duracionBX,mapaGruposX);
-			mapaAsignaturasX.put(nombreX,auxi );
+			mapaAsignaturasX.put(nombreX,auxi);
 			auxi.setHorafinalGrupos();
 		}
 		else {

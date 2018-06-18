@@ -18,11 +18,32 @@ private Map<String,Asignatura> asignaturas=new TreeMap<String,Asignatura>();
 private static int ContadorProfesores=0;
 
 
+public void asignarGrupo(String siglas,String tipoGrupo,String idGrupo) {
+		this.asignaturas.put(siglas+"+"+tipoGrupo+"+"+idGrupo, new Asignatura(siglas,tipoGrupo,idGrupo));
+}
+
+
 public void setcuatrimestres(Map<String,Asignatura> mapaAsignaturas) {
 	for(Map.Entry<String, Asignatura> asig: asignaturas.entrySet()) {
 		String aux=faux.getcuatrimestre(asig.getValue().getsiglas(), mapaAsignaturas);
 		asig.getValue().setcuatrimestre(aux);
 	}
+}
+
+private static TreeMap<String, Profesor> listaProfesores = new TreeMap<String, Profesor>();
+	
+public static TreeMap<String, Profesor> getListaProfesores(Map<String,Persona> mapaPersonas) {
+	listaProfesores = new TreeMap<String, Profesor>();
+	for(Map.Entry<String, Persona> p: mapaPersonas.entrySet()) {
+		if(p.getValue() instanceof Profesor) {
+			listaProfesores.put(p.getKey(),(Profesor) p.getValue());
+		}
+	}
+	return listaProfesores;
+}
+
+public void setListaProfesores(TreeMap<String, Profesor> listaProfesores) {
+	Profesor.listaProfesores = listaProfesores;
 }
 
 

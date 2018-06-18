@@ -1,5 +1,9 @@
 package funciones;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.Map;
@@ -12,25 +16,36 @@ import principal.Persona;
 import principal.Profesor;
 
 public class Fprincipales{
-	public static Map<String,Persona> InsertaPersona(Map<String,Persona> mapaPersonas,String persona) {
-		persona=persona.trim();
-		persona=faux.quitarespacios(persona);
+	public static Map<String,Persona> InsertaPersona(Map<String,Persona> mapaPersonas,String comando) {
+		comando=comando.trim();
+		comando=faux.quitarespacios(comando);
 		String[] datos;
 		int errores=0;
-		datos=persona.split(" ");
+		datos=comando.split(" ");
 		if(datos.length<6) {
-			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+persona);
+			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+comando);
 			return mapaPersonas;
 		}
 		String dni= datos[2];
-		String nombre=datos[3];
+		int auxij=comando.indexOf("\"");
+		int auxij2=comando.indexOf("\"", auxij+1);
+		String paratamaño=comando.substring(0, auxij);
+		String auxiliartamaño=comando.substring(auxij+1, auxij2);//Este e o nombre
+		String auxiliar2tamaño=comando.substring(auxij2+1).trim();
+		auxiliartamaño=auxiliartamaño.replace(" ", "w");
+		paratamaño=paratamaño+" "+auxiliartamaño+" "+auxiliar2tamaño;
+		String nombre=comando.substring(auxij+1,auxij2);
 		String perfil= faux.minusculas(datos[1]);//DATOS 1 E O PERFIL
-		if(perfil.equals("alumno")&&datos.length!=6) {
-			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+persona);
+		paratamaño=faux.quitarespacios(paratamaño.trim());
+		int tamaño=paratamaño.split(" ").length;
+		datos=paratamaño.split(" ");
+		//teremos o tamaño normal pero o nombre non
+		if(perfil.equals("alumno")&&tamaño!=6) {
+			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+comando);
 			return mapaPersonas;
 		}
-		else if(perfil.equals("profesor")&&datos.length!=7) {
-			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+persona);
+		else if(perfil.equals("profesor")&&tamaño!=7) {
+			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+comando);
 			return mapaPersonas;
 		}
 			
@@ -216,6 +231,9 @@ public class Fprincipales{
 	
 	public static Map<String,Persona> AsignarGrupo(Map<String,Persona> mapaPersonas,Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAula,String comando){
 		int errores=0;
+		comando=faux.quitarespacios(comando.trim());
+		int correcion=comando.indexOf(" ");
+		comando=comando.substring(correcion+1);
 		String[] aux=comando.split(" ");
 		String perfilX= aux[1].trim().toLowerCase();
 		String dniX=aux[2].trim();
@@ -226,12 +244,14 @@ public class Fprincipales{
 		Alumno alu	=	null;
 		Profesor prof=null;
 		int errorasig=0;
+		int noexistealu=0;
 		if(perfilX.equals("profesor")&&!faux.existepersona(dniX, mapaPersonas)) {
 			errores++;
 			Escribirtxt.Avisos("Profesor inexistente");
 		}
 		else if(perfilX.equals("alumno")&&!faux.existepersona(dniX, mapaPersonas)) {
 			errores++;
+			noexistealu++;
 			Escribirtxt.Avisos("Alumno inexistente");
 		}
 		if(!faux.existeasignatura(siglasX, mapaAsignaturas)) {
@@ -241,13 +261,15 @@ public class Fprincipales{
 		}
 		if(!tipoX.equals("A")&&!tipoX.equals("B")) {
 			errores++;
+			errorasig++;
 			Escribirtxt.Avisos("Tipo de grupo incorrecto");
 		}
 		
 		if(errorasig==0) {
 			asigX=faux.getasignatura(siglasX, mapaAsignaturas);
-			if(!faux.existegrupo(tipoX, asigX.getmapagrupos())) {
+			if(!faux.existegrupo(tipoX+"+"+idX, asigX.getmapagrupos())) {
 				errores++;
+				errorasig++;
 				Escribirtxt.Avisos("Grupo inexistente");
 			}
 		}
@@ -257,7 +279,7 @@ public class Fprincipales{
 				Escribirtxt.Avisos("Grupo ya asignado");
 			}
 		}
-		else {//se non e vaca e boi
+		else if(noexistealu==0){//se non e vaca e boi
 			alu=faux.getalumno(dniX, mapaPersonas);
 			if(!faux.alumnomatriculado(alu, siglasX)) {
 				Escribirtxt.Avisos("Alumno no matriculado");
@@ -283,7 +305,7 @@ public class Fprincipales{
 		String horafinal=auxi[2];
 		String cuatrimestre=faux.getcuatrimestre(siglasX, mapaAsignaturas).trim();
 		String curso=faux.getcurso(siglasX, mapaAsignaturas);
-				if(perfilX.toLowerCase().equals("alumno")) {
+				if(perfilX.toLowerCase().equals("alumno")&&noexistealu==0) {
 					alu=faux.getalumno(dniX, mapaPersonas);
 						if(faux.existesolapealumno(alu,curso,cuatrimestre,dia, horainicio, horafinal, mapaAsignaturas)) {
 							errores++;
@@ -304,8 +326,19 @@ public class Fprincipales{
 							Escribirtxt.Avisos("Solape profesor");
 						}}	
 		}//fin de errorasig=0
+		
+		if(errorasig==0&&errores==0) {
+			if(perfilX.toLowerCase().equals("alumno")) {
+				alu.asignarGrupo(siglasX, tipoX, idX);
+			}
+			if(perfilX.toLowerCase().equals("profesor")) {
+				prof.asignarGrupo(siglasX, tipoX, idX);
+			}
+		}
+		
 		return mapaPersonas;	
 	}
+	
 	
 	public static Map<String,Asignatura> CreaGrupoAsig(Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAulas,String comando){
 		comando= faux.quitarespacios(comando.trim());
@@ -351,34 +384,95 @@ public class Fprincipales{
 		 * POSTERIOR
 		 */
 		
-		
-		
-		
-		
 		return mapaAsignaturas;
 	}
+	public static void Expediente(Map<String,Persona> mapaPersonas,Map<String,Asignatura> mapaAsignaturas,String comando){	
+		FileWriter escritura=null; 	
+		if(comando.length()!=3) {
+			Escribirtxt.Avisos("Numero de argumentos incorrecto: "+comando);
+			return;
+		}
+		comando=faux.quitarespacios(comando.trim());
+		String[] aux=comando.split(" ");
+		String dni=aux[1];
+		String salida=aux[2];
+		if(!faux.existealumno(dni, mapaPersonas)){
+			Escribirtxt.Avisos("Alumno inexistente");
+			return;
+		}
+		Alumno alu=faux.getalumno(dni,mapaPersonas);
+		String asignaturasaprobadas=alu.getasignaturasprobada();
+		String[] auxiliar=asignaturasaprobadas.split("\r\n");
+		ArrayList<String> devolver = new ArrayList<String>();
+		ArrayList<String> expediente = new ArrayList<String>();
+		for(int k=0; k<auxiliar.length;k++){
+			auxiliar[k]=faux.quitarespacios(auxiliar[k].trim());
+			auxiliar[k]=auxiliar[k].replace(" ",";");
+		}
+		try {
+			File archivo=new File(salida+".txt");
+			if(archivo.exists()) {
+				escritura= new FileWriter(salida+".txt",true);
+			}
+			else {
+				escritura= new FileWriter(salida+".txt");
+			}
+		
+		float notatotal=0;
+		String cursoimparte="";
+		for(int i=0; i<(auxiliar.length);i++) {
+			String siglas=auxiliar[i].split(";")[0].trim();
+			for(Map.Entry<String, Asignatura> p: mapaAsignaturas.entrySet()) {
+				if(p.getValue().getsiglas().equals(siglas)) {					
+					cursoimparte=p.getValue().getcurso();
+				}		
+				
+			}
+			expediente.add(cursoimparte+"; "+auxiliar[i]+"\r\n");
+			devolver.add(auxiliar[i].split(";")[1].trim());
+			notatotal=notatotal+Float.parseFloat(auxiliar[i].split(";")[1].trim());				
+		}
+		Collections.sort(expediente);
+		for(String s: expediente) {		
+			escritura.write(s);
+		}	
+		float media = notatotal / devolver.size();
+		escritura.write(Float.toString(media)+"\r\n");			
+		escritura.close();
+		}			
+		catch(Exception e) {
+			e.printStackTrace();
+		}				
+}
+	
+	public static void ocupacionAula(String comando,Map<String,Aula> mapaAulas,Map<String,Asignatura> mapaAsignaturas,Map<String,Persona> mapaPersonas) {
+		String[] aux=comando.split(" ");
+		int filas=20;
+		int columnas=6;
+		Aula au;
+			if(aux[1].equals("*")) {
+			for(Map.Entry<String, Aula> aulaX: mapaAulas.entrySet()) {
+				String[][] imprimir=faux.getformatotabla(aulaX.getValue().getHorario(mapaAsignaturas, mapaPersonas));
+				for(int k=0;k<filas;k++) {
+					for(int j=0;j<columnas;j++) {
+						System.out.print(imprimir[k][j]+"\t\t");
+					}
+					System.out.print("\r\n");
+				}
+			}
+			}
+			else {
+				au=faux.getaula(aux[1], mapaAulas);
+				String[][] imprimir=faux.getformatotabla(au.getHorario(mapaAsignaturas, mapaPersonas));
+				for(int k=0;k<filas;k++) {
+					for(int j=0;j<columnas;j++) {
+						System.out.print(imprimir[k][j]+"\t\t");
+					}
+					System.out.print("\r\n");
+				}
+			}
+		return;
+	}
 	
 	
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

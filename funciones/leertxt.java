@@ -11,6 +11,46 @@ import principal.Aula;
 import principal.Persona;
 
 public class leertxt {
+	
+	
+	public static String[] leerejecucion(String direccion){
+		//solo lee, no procesa datos. El switch se pasa a la principal
+		String todo="  ";
+		String[] devolver=null;
+		try {
+			todo=todo.trim();
+			String bfRead;
+			BufferedReader read= new BufferedReader(new FileReader(direccion));
+			while((bfRead=read.readLine())!=null) {				
+				if (bfRead.startsWith("*")){
+					continue;
+					//Ignora las lineas que empiezan por asterisco
+				}
+				else todo=todo+bfRead+"\n";			
+					
+			}//En todo estaria todo o fichero
+			devolver= todo.split("\n");
+			read.close();
+			}catch(Exception e) {
+			System.out.println("Fichero de ejecución no existente");
+			}
+		
+//		todos=todo.split("[*]");
+//		mapaEjecucionX.putAll(ordenar. (todos));
+		return devolver;		
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static Map<String, Persona> leeralumno(String direccion,Map<String,Asignatura> mapaAsignaturas,Map<String,Aula> mapaAulas){
 			Map<String,Persona> mapaAlumnoX= new TreeMap<String,Persona>();	
 			String todo="     ";

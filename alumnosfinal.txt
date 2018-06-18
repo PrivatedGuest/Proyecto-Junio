@@ -19,7 +19,7 @@ Garcia Soto, Juan
 g.soto.25@yahoo.es
 21\07\1997
 01\09\2016
-ATR  6.5 ; PI 16/17 7.5
+PI 16/17 7.5
 CD A 1 ; CD B 3 ; PII A 1 ; PII B 2
 *
 45004720X

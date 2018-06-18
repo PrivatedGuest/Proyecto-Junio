@@ -18,6 +18,16 @@ private static int ContadorAlumnos=0;
 //A clave do mapa de asignaturas sera siglas+tipoGrupo se nos referimos as que esta cursando ou
 //solo as siglas que nos referimos a docencia que xa cursou e aprobou
 
+public void asignarGrupo(String asignatura,String tipoGrupo,String idGrupo) {
+	String aux="fallo en asignarGrupo";
+	for(Map.Entry<String, Asignatura> a: this.asignaturas.entrySet()) {
+		aux=asignatura+"+"+tipoGrupo;
+		if(a.getKey().contains(asignatura)&&a.getKey().contains("+M")) {
+			asignaturas.remove(asignatura+"+M");
+		}
+	}
+	asignaturas.put(aux, new Asignatura(asignatura,tipoGrupo,idGrupo));
+}
 
 public String gethorario(Map<String,Asignatura>mapaAsigGLOB) {
 	String devolver="";
@@ -190,12 +200,17 @@ public Alumno(String dniX,String nombreX,GregorianCalendar fechaNacX,GregorianCa
 
 
 
+public String getasignaturasprobada(){
+	 String devolver="";
+	 for(Map.Entry<String, Asignatura> a: asignaturas.entrySet()){
+		 if(!a.getKey().contains("+")) {//Linea 5
+			 devolver=devolver+" "+a.getValue().getsiglas()+" "+a.getValue().getnota()+" "+a.getValue().getcurso()+"\r\n";
+		 }
+	 }
+	 return devolver;
+	}
 
 
-
-public void setasignaturas(Map<String,Asignatura> asignaturasX) {
-	asignaturas.putAll(asignaturasX);
-}
 
 public String imp() {
 	String aux=dni+"\r\n"+nombre+"\r\n"+email+"\r\n"+cambios.GregorianCalendar_String(fechaNac)+"\r\n"+cambios.GregorianCalendar_String(fechaIng)+"\r\n";
